@@ -1,0 +1,38 @@
+{% include 'base/navbar.html' %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Sign up for a free account</h2>
+                        <p class="card-text">Please choose one of the options</p>
+                        <div class="btn-container">
+                            <a class="btn btn-primary btn-lg" href="{% url 'student_registration' %}">Student</a>
+                            <a class="btn btn-primary btn-lg" href="{% url 'tutor_registration' %}">Tutor</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .container {
+            text-align: center;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .btn {
+            margin: 5px;
+            width: 120px; 
+        }
+        .btn:hover {
+            background-color: hwb(303 0% 0%);
+        }
+    </style>
+    
+{% endblock content %}

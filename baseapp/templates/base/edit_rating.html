@@ -1,0 +1,21 @@
+{% extends "base/navbar.html" %}
+{% block title %} Edit Rating {% endblock %}
+{% block content %}
+<br><br><br>
+<div class="container text-center mb-5">
+  <h2>Edit Rating</h2>
+  <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Update Rating</button>
+      <br><br><br><br>
+  </form>
+</div>
+
+
+<style>
+    .custom-textarea {
+      width: 70%; 
+    }
+  </style>
+{% endblock %}

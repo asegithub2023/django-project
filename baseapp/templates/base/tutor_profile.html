@@ -1,0 +1,124 @@
+{% extends "base/navbar.html" %}
+{% block title %} Tutor Profile: {{ tutor.first_name }} {{ tutor.last_name }} {% endblock %}
+
+{% block content %}
+<br><br><br>
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-4" class="profile-image-container">
+            <img src="{{ tutor.profile_photo.url }}" alt="{{ tutor.first_name }}'s Profile Photo" width="200"
+                height="200">
+            <h5>{{ tutor.first_name }} {{ tutor.last_name }}</h5>
+
+
+            <p>
+                Average Rating:
+                {% if avg_rating.avg_rating %}
+                {% for i in avg_rating_range %}
+                {% if i < avg_rating.avg_rating %} &#9733; <!-- Display a full star for each integer part of the average
+                    rating -->
+                    {% elif i == avg_rating.avg_rating %}
+                    {% if avg_rating.avg_rating|floatformat:1 == avg_rating.avg_rating %}
+                    &#9733; <!-- Display a full star if the average rating is an integer -->
+                    {% else %}
+                    &#9734; <!-- Display an empty star for the decimal part -->
+                    {% endif %}
+                    {% else %}
+                    &#9734; <!-- Display an empty star for ratings less than the average rating -->
+                    {% endif %}
+                    {% endfor %}
+                    ({{ avg_rating.avg_rating|floatformat:1 }} stars)
+                    {% else %}
+                    No ratings yet.
+                    {% endif %}
+
+
+
+            </p>
+
+
+
+            <a href="{% url 'add_rating' tutor.id %}">Add Rating & Review</a><br>
+            <a href="{% url 'send_request' tutor.id %}" class="btn btn-primary">Send Request</a>
+
+        </div class="profile-options">
+
+
+
+
+
+        <div class="col-md-8">
+            <h4>About Me</h4>
+            <p><i class="fas fa-info-circle text-primary"></i> <strong>Self Description:</strong>
+                {{tutor.self_description }}</p>
+            <p><i class="fas fa-briefcase text-primary"></i> <strong>Experience:</strong> {{ tutor.experience }}</p>
+            <p><i class="fas fa-cogs text-primary"></i> <strong>Skills:</strong> {{ tutor.skills }}</p>
+            <p><i class="fas fa-book text-primary"></i> <strong>Subjects Taught:</strong> {{ tutor.subjects }}</p>
+            <p><i class="fas fa-map-marker-alt text-primary"></i> <strong>Location:</strong> {{ tutor.location }}</p>
+            <p><i class="fas fa-graduation-cap text-primary"></i> <strong>Education Level:</strong>
+                {{tutor.education_level }}</p>
+            <p><i class="far fa-calendar-alt text-primary"></i> <strong>Availability:</strong>
+                {{tutor.available_days.all|join:", " }}</p>
+            <p><i class="fas fa-sign-in-alt text-primary"></i> <strong>Last Login:</strong> {{ tutor.last_login }}</p>
+            <p><i class="fas fa-calendar-plus text-primary"></i> <strong>Date Joined:</strong> {{ tutor.date_joined }}
+            </p>
+            <p><i class="fas fa-user text-primary"></i> <strong>Username:</strong> {{ tutor.username }}</p>
+        </div>
+
+
+
+
+    </div>
+
+
+    <strong>
+        <p> Rating and Reviews from students</p>
+    </strong>
+
+
+    {% if ratings %}
+    {% for rating in ratings %}
+    <div class="rating">
+        <img src="{{ rating.student.profile_photo.url }}" alt="{{ rating.student.first_name }}'s Profile Photo"
+            width="50" height="50">
+        <p class="star-rating">
+            {% for i in rating.rating_value|get_range %}
+            &#9733; <!-- Display a star for each rating value -->
+            {% endfor %}
+        </p>
+        <p>@{{ rating.student }}</p>
+        <p>{{ rating.review_text }}</p>
+        <p>{{ rating.date_created }}</p>
+        <div class="rating-options">
+
+
+            {% if request.user != rating.student.user %}
+            <a href="{% url 'edit_rating' rating.id %}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i>
+                Edit</a>
+            <a href="{% url 'delete_rating' rating.id %}" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i>
+                Delete</a>
+            {% endif %}
+
+
+        </div>
+
+
+
+
+        <hr>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>No reviews yet.</p>
+    {% endif %}
+
+
+</div>
+
+<style>
+    .star-rating {
+        color: gold;
+        /* Set the color of the stars */
+    }
+</style>
+{% endblock %}

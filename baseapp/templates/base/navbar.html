@@ -1,0 +1,171 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}" />
+
+    <!-- Font awesome icons -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+
+
+    <title>{% block title %} {% endblock %} </title>
+    <!-- Include CSS and JavaScript files -->
+
+    <style>
+        /* Custom CSS for navbar spacing */
+        .navbar-nav.navbar-right>* {
+            margin-left: 10px;
+            /* Adjust as needed */
+        }
+
+        /* Show dropdown on hover */
+        #profile-dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* Hide dropdown by default */
+        .dropdown-menu {
+            display: none;
+        }
+
+        .nav-item {
+            margin-right: 41px;
+            /* Adjust the value as needed */
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container-fluid px-0">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a href="/" class="navbar-brand">
+                <i class="fas fa-home" style="font-size: 18px;"></i> Home
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ml-auto">
+
+                    <a href="{% url 'index' %} " class="nav-item nav-link" style="font-size: 18px;"><i class="bi bi-telephone-fill"></i>Contact Us</a>
+                    {% if request.user.is_student %}
+                    <a href="{% url 'view_response' %}" class="nav-item nav-link" style="font-size: 18px;">Request
+                        Section</a>
+
+                    {% elif request.user.is_tutor %}
+                    <a href="{% url 'view_requests' %}" class="nav-item nav-link" style="font-size: 18px;">Request
+                        Section</a>
+
+                    {% elif not request.user.is_student and not request.user.is_tutor or request.user.is_anonymous %}
+                    <a href="#" class="nav-item nav-link" style="font-size: 18px;">Request Section</a>
+                    {% endif %}
+
+
+
+                    <a href="{% url 'howitworks' %}" class="nav-item nav-link" style="font-size: 18px;">How It Works</a>
+
+
+                    <a href="{% url 'front_page' %}" class="nav-item nav-link" style="font-size: 18px;">Forum</a>
+                    <a href="{% url 'all_tutors' %}" class="nav-item nav-link" style="font-size: 18px;">Find a Tutor</a>
+                    
+                    {% if request.user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="nav-item nav-link" style="font-size: 18px;">Logout</a>
+
+                    <div class="dropdown" id="profile-dropdown">
+                        <img class="profile-image rounded-circle article-img" src="{{ request.user.profile_photo.url }}"
+                            alt="Profile Image">
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profile-dropdown">
+                            <a class="dropdown-item" href="{% url 'tutor_profile_update' %}"><i
+                                    class="fas fa-user text-primary"></i> View Profile</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-edit text-primary"></i> Request
+                                Section</a>
+
+
+                                <a class="dropdown-item" href="{% url 'index' %}"><i class="bi bi-telephone-fill"></i> contact us</a>
+
+                            <a class="dropdown-item" href="{% url 'password_change' %}"><i
+                                    class="fas fa-key text-primary"></i> Change Password</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'logout' %}"><i
+                                    class="fas fa-sign-out-alt text-primary"></i> Log out</a>
+
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="nav-item nav-link   login-btn">Login</a>
+                    <a href="{% url 'choose_account_type' %}" class="nav-item nav-link  signup-btn">Sign Up</a>
+
+
+
+
+
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        <!-- Flash messages -->
+        {% if messages %}
+        <div class="alert alert-dismissible" id="flash-message">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+
+
+        {% block content %}{% endblock %}
+    </div>
+
+
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+        <!-- JavaScript to remove the flash message after a few seconds -->
+<script>
+    // Wait for the DOM to be fully loaded
+    document.addEventListener("DOMContentLoaded", function() {
+      // Set a timeout to hide the flash message after 5 seconds (5000 milliseconds)
+      setTimeout(function() {
+        var flashMessage = document.getElementById('flash-message');
+        if (flashMessage) {
+          flashMessage.remove();
+        }
+      }, 3000);
+    });
+  </script>
+  
+
+</body>
+
+</html>

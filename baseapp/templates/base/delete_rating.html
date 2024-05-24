@@ -1,0 +1,14 @@
+{% extends "base/navbar.html" %}
+{% block title %} Delete Rating {% endblock %}
+{% block content %}
+
+<div class="text-center mt-5">
+    <h2>Delete Rating</h2>
+    <p>Are you sure you want to delete this rating?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete Rating</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base/navbar.html" %}
+{% block title %} Add Rating {% endblock %}
+
+{% block content %}
+<br><br><br>
+<div class="container">
+    <h2>Add Rating</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="rating">Rating:</label>
+            <div class="rating" id="starRating">
+                <span class="star" data-rating="1">&#9733;</span>
+                <span class="star" data-rating="2">&#9733;</span>
+                <span class="star" data-rating="3">&#9733;</span>
+                <span class="star" data-rating="4">&#9733;</span>
+                <span class="star" data-rating="5">&#9733;</span>
+                <input type="hidden" name="rating_value" class="rating-value" value="5">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="review">Review:</label>
+            <textarea class="form-control" id="review" name="review_text" rows="5" required>{{ form.review_text.value }}</textarea>
+            {% if form.review_text.errors %}
+                <div class="alert alert-danger" id="error-message">
+                    {% for error in form.review_text.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<style>
+/* Define styles for selected and unselected stars */
+.star {
+    cursor: pointer;
+}
+.selected {
+    color: gold; /* Change color to indicate selection */
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.star');
+    const ratingValue = document.querySelector('.rating-value');
+    const form = document.querySelector('form');
+
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            const rating = parseInt(star.getAttribute('data-rating'));
+            ratingValue.value = rating;
+            stars.forEach(s => {
+                if (parseInt(s.getAttribute('data-rating')) <= rating) {
+                    s.classList.add('selected'); // Add 'selected' class to the clicked star
+                } else {
+                    s.classList.remove('selected'); // Remove 'selected' class from unclicked stars
+                }
+            });
+        });
+    });
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        form.submit();
+    });
+
+    // Automatically hide error message after 3 seconds
+    const errorMessage = document.getElementById('error-message');
+    if (errorMessage) {
+        setTimeout(() => {
+            errorMessage.style.display = 'none';
+        }, 3000); // 3000 milliseconds = 3 seconds
+    }
+});
+</script>
+{% endblock %}

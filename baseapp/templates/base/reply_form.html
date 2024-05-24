@@ -1,0 +1,38 @@
+
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12 text-right">
+    <!-- Reply Button -->
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#replyFormCollapse" aria-expanded="false" aria-controls="replyFormCollapse">
+      Reply
+    </button>
+  </div>
+</div>
+
+<!-- Reply Form -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="collapse" id="replyFormCollapse">
+      <form method="post" action="{% url 'reply_to_topic' topic.id %}">
+          {% csrf_token %}
+          {{ reply_form.as_p }}
+          <button type="submit" class="btn btn-primary">Submit Reply</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<style>
+  .custom-textarea {
+    width: 84%;
+}
+</style>
+{% endblock content %}
+
+
+
+

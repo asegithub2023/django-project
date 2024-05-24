@@ -1,0 +1,38 @@
+{% extends "base/navbar.html" %}
+
+{% block title %} All Tutor Profiles {% endblock %}
+
+{% block content %}
+
+{% if tutors %}
+    <h2 class="mt-5">Search Results for "{{ query }}"</h2>
+    <div class="row mt-5">
+        {% for tutor in tutors %}
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <a href="{% url 'tutor_profile' tutor.id %}">
+                                <img src="{{ tutor.profile_photo.url }}" class="img-fluid rounded-start" alt="{{ tutor.first_name }}'s Profile Photo" width="300px" height="300px">
+                               <h5> {{tutor.first_name}} {{tutor.last_name}} </h5>
+                            </a>
+                            
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h4 class="card-title">About Me</h4>
+                                <p class="card-text">{{ tutor.self_description }}</p>
+                                <p class="card-text"><i class="fas fa-book text-primary"></i> <strong>Subjects Taught:</strong> {{ tutor.subjects }}</p>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No tutors found for "{{ query }}"</p>
+{% endif %}
+
+{% endblock content %}

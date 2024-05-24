@@ -1,0 +1,178 @@
+{% extends 'base/navbar.html' %}
+{% load static %}
+{% block content %}
+<br><br><br>
+<div class="container mt-3">
+  <span> 
+    {% if topic.creator.profile_photo %}
+    <img class="profile-image rounded-circle article-img" src="{{ topic.creator.profile_photo.url }}" alt="Profile Image">
+    {% else %}
+    <img class="profile-image rounded-circle article-img" src="{% static 'images/default.jpg' %}" width="14px" height="14px" alt="Default Profile Image">
+    {% endif %}
+    <p>@{{ topic.creator.username }} </p>
+    <p>{{ topic.created_at|timesince }} ago</p>
+  </span>
+
+<h2>{{ topic.title }}</h2>
+<strong>{{ num_replies }} replies</strong>
+<p>{{ topic.content }}</p>
+
+
+
+{% if request.user == topic.creator %}
+  <a href="{% url 'edit_topic' topic_id=topic.id %}" class="icon-link">
+    <img src="https://cdn-icons-png.flaticon.com/128/1828/1828911.png" width="19px" height="19px" alt="Edit" style="margin-right: 10px;">
+    <span class="hover-text">edit</span>
+  </a>
+  <a href="{% url 'delete_topic' topic_id=topic.id %}" class="icon-link">
+    <img src="https://uxwing.com/wp-content/themes/uxwing/download/user-interface/trash-bin-icon.svg" width="19px" height="19px" alt="Delete">
+    <span class="hover-text">delete</span>
+  </a>
+{% endif %}
+
+
+
+
+
+  <!-- Include the Reply Form -->
+  {% include 'base/reply_form.html' with form=reply_form %}
+
+  <!-- List of Replies -->
+  <br>
+  <h3>Comments:</h3>
+  <br>
+  <ul>
+    {% for reply in replies %}
+    <li>
+      <span>
+        {% if reply.creator.profile_photo %}
+        <img class="profile-image rounded-circle article-img" src="{{ reply.creator.profile_photo.url }}"
+          alt="Profile Image">
+        {% else %}
+        <img class="profile-image rounded-circle article-img" src="{% static 'images/default.jpg' %}" width="27px"
+          height="27px" alt="Default Profile Image">
+        {% endif %}
+        <p>@{{ reply.creator.username }} </p>
+        <p>{{ reply.created_at|timesince }} ago</p>
+      </span>
+      <p>{{ reply.content }}</p>
+
+      
+<!-- Include the Reply Form for replying to this reply -->
+<div class="d-flex justify-content-end mb-3">
+  <div class="ml-auto">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#replyFormCollapse{{ reply.id }}"
+      aria-expanded="false" aria-controls="replyFormCollapse{{ reply.id }}">
+      Reply
+    </button>
+  </div>
+</div>
+
+
+
+{% if request.user == reply.creator %}
+    <a href="{% url 'edit_reply' topic_id=topic.id reply_id=reply.id %}" class="icon-link">
+      <img src="https://cdn-icons-png.flaticon.com/128/1828/1828911.png" width="19px" height="19px" alt="Edit" style="margin-right: 10px;">
+      <span class="hover-text">edit</span>
+    </a>
+    <a href="{% url 'delete_reply' topic_id=topic.id reply_id=reply.id %}" class="icon-link">
+      <img src="https://uxwing.com/wp-content/themes/uxwing/download/user-interface/trash-bin-icon.svg" width="19px" height="19px" alt="Delete">
+      <span class="hover-text">delete</span>
+    </a>
+{% endif %}
+
+
+
+
+
+<div class="collapse" id="replyFormCollapse{{ reply.id }}">
+  <form method="post" action="/topic/{{ topic.id }}/reply/{{ reply.id }}/">
+    {% csrf_token %}
+    {{ reply_form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit Reply</button>
+  </form>
+</div>
+
+
+
+
+<br><br><br><br><br>
+      <!-- List of replies to this reply -->
+      <ul>
+        {% for child_reply in reply.replies.all %}
+        <li>
+          <span>
+            {% if child_reply.creator.profile_photo %}
+            <img class="profile-image rounded-circle article-img" src="{{ child_reply.creator.profile_photo.url }}"
+              alt="Profile Image">
+            {% else %}
+            <img class="profile-image rounded-circle article-img" src="{% static 'images/default.jpg' %}" width="27px"
+              height="27px" alt="Default Profile Image">
+            {% endif %}
+            <p>@{{ child_reply.creator.username }} </p>
+            <p>{{ child_reply.created_at|timesince }} ago</p>
+          </span>
+          <p>{{ child_reply.content }}</p>
+
+<!-- Reply Button and Form for nested replies -->
+<div class="d-flex justify-content-end mb-3">
+  <div class="ml-auto">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#replyFormCollapse{{ child_reply.id }}" aria-expanded="false" aria-controls="replyFormCollapse{{ child_reply.id }}">
+      Reply
+    </button>
+  </div>
+</div>
+
+{% if request.user == child_reply.creator %}
+  <a href="{% url 'edit_reply' topic_id=topic.id reply_id=child_reply.id %}" class="icon-link">
+    <img src="https://cdn-icons-png.flaticon.com/128/1828/1828911.png" width="19px" height="19px" alt="Edit" style="margin-right: 10px;">
+    <span class="hover-text">edit</span>
+  </a>
+  <a href="{% url 'delete_reply' topic_id=topic.id reply_id=child_reply.id %}" class="icon-link">
+    <img src="https://uxwing.com/wp-content/themes/uxwing/download/user-interface/trash-bin-icon.svg" width="19px" height="19px" alt="Delete">
+    <span class="hover-text">delete</span>
+  </a>
+{% endif %}
+
+<div class="collapse" id="replyFormCollapse{{ child_reply.id }}">
+  <form method="post" action="{% url 'reply_to_reply' topic.id child_reply.id %}">
+    {% csrf_token %}
+    {{ reply_form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit Reply</button>
+  </form>
+</div>
+ </li>
+
+        {% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+
+<style>
+
+.icon-link {
+  position: relative;
+  display: inline-block;
+}
+
+.hover-text {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #000; 
+}
+
+.icon-link:hover .hover-text {
+  display: block;
+}
+
+
+</style>
+{% endblock %}
+
+

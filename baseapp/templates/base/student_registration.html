@@ -1,0 +1,31 @@
+
+{% extends 'base/navbar.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<br><br><br>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg rounded-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="font-weight-light text-center">Create Account</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="form validate">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="form-group d-flex align-items-center justify-content-center mt-4 mb-0">
+                            <button type="submit" class="btn btn-primary btn-block col-md-6">Sign Up</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <div class="small">
+                        <p><a href="{% url 'login' %}">Already have an account? Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

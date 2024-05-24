@@ -1,0 +1,97 @@
+
+{% extends 'base/navbar.html' %}
+{% block content %}
+<br><br><br>
+<div class="container mt-5">
+ 
+
+
+  <div class="row">
+    <div class="column">
+      <strong>Categories</strong>
+      <br>
+      <ul class="list-group">
+        {% for category in categories %}
+        <li class="list-group-item">
+          <div class="category-wrapper">
+            <a href="{% url 'category_topics' category.id %}" class="category-name">{{ category.name }}</a>
+            <a href="{% url 'create_topic' category.id %}" class="create-topic-link">Create Topic</a>
+
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+
+    <div class="column">
+      <strong>Latest Topics</strong>
+      <br>
+      <ul>
+        {% for topic in latest_topics %}
+        <li>
+          <a href="{% url 'topic_detail' topic.id %}">{{ topic.title }}</a>
+          <span>{{ topic.created_at|timesince }} ago</span>
+
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+
+    <div class="column">
+      <strong>Replies</strong>
+      <br>
+      <ul>
+        {% for topic in latest_topics %}
+        <li>
+          <span>{{ topic.num_replies }} replies</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+
+  
+
+
+  </div>
+</div>
+<hr>
+<style>
+  .category-wrapper {
+    position: relative;
+  }
+
+  .create-topic-link {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+
+  .category-wrapper:hover .create-topic-link {
+    display: block;
+  }
+</style>
+
+
+
+<script>
+  $(document).ready(function() {
+    // Hide messages after 5 seconds
+    setTimeout(function() {
+        $('.alert').fadeOut('slow');
+    }, 5000);
+});
+</script>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,32 @@
+<!-- category_topics.html -->
+
+{% extends 'base/navbar.html' %}
+{% load static %}
+{% block content %}
+<br><br><br>
+<div class="container mt-5">
+  <h2>{{ category.name }}</h2>
+  <ul>
+    {% for topic in topics %}
+    <li>
+
+      <span>
+        {% if topic.creator.profile_photo %}
+        <img class="profile-image rounded-circle article-img" src="{{ topic.creator.profile_photo.url }}"
+          alt="Profile Image">
+        {% else %}
+        <img class="profile-image rounded-circle article-img" src="{% static 'images/default.jpg' %}" width="27px"
+          height="27px" alt="Default Profile Image">
+        {% endif %}
+        <p>@{{ topic.creator.username }} </p>
+      </span>
+      <a href="{% url 'topic_detail' topic.id %}">{{ topic.title }}</a>
+      <span>{{ topic.created_at|timesince }} ago</span>
+
+
+    </li>
+
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base/navbar.html' %}
+{% block content %}
+<br><br><br>
+<div class="container">
+  <h2 class="text-center mb-4">Your Requests</h2>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Tutor Name</th>
+          <th>Request Subjects</th>
+          <th>Status</th>
+          <th>Request Date</th>
+          <th>Action</th> <!-- Added column for action -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for request in requests %}
+        <tr>
+          <td>{{ request.tutor.first_name }} {{ request.tutor.last_name }}</td>
+          <td>{{ request.subjects }}</td>
+          <td>{{ request.status }}</td>
+          <td>{{ request.request_date }}</td>
+          <td>
+            <!-- Add delete button/link -->
+            <form action="{% url 'delete_request' request.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">No requests found.</td> 
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+<style>
+  .table-responsive {
+    overflow-x: auto;
+  }
+  th {
+    background-color: #f8f9fa;
+    color: #212529;
+  }
+  tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  tbody tr:hover {
+    background-color: #e9ecef;
+  }
+</style>
+
+{% endblock %}

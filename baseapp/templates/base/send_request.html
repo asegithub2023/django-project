@@ -1,0 +1,67 @@
+{% load crispy_forms_tags %}
+{% include "base/navbar.html" %}
+{% block content %}
+<br><br><br>
+<div class="container-fluid py-5">
+    <div class="row justify-content-center bg-primary">
+        <div class="col-lg-6">
+            <div class="card shadow-lg rounded-lg">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Send Request to {{ tutor.first_name }} {{ tutor.last_name }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted text-center">Tutor Request Form</h6>
+                    <p class="card-text text-center">Request a tutor by filling out the form below.</p>
+                    <form method="post" class="form" id="requestForm">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="form-group d-flex justify-content-center mt-4 mb-0">
+                            <button type="submit" class="btn btn-primary">Submit Request</button>
+                        </div>
+                    </form>
+                    <div id="client-side-error" class="alert alert-danger mt-3" style="display: none;">Only alphabet characters are allowed!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('requestForm');
+    const errorMessage = document.getElementById('client-side-error');
+    const alphabetOnlyFields = ['id_subjects', 'id_city', 'id_language_spoken'];
+    
+    form.addEventListener('submit', function(event) {
+        let valid = true;
+        alphabetOnlyFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (!/^[a-zA-Z\s]*$/.test(field.value)) {
+                valid = false;
+                field.classList.add('is-invalid');
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+
+        if (!valid) {
+            errorMessage.style.display = 'block';
+            event.preventDefault();
+        } else {
+            errorMessage.style.display = 'none';
+        }
+    });
+
+    alphabetOnlyFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        field.addEventListener('input', function() {
+            if (!/^[a-zA-Z\s]*$/.test(field.value)) {
+                field.classList.add('is-invalid');
+                errorMessage.style.display = 'block';
+            } else {
+                field.classList.remove('is-invalid');
+                errorMessage.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

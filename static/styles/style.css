@@ -1,0 +1,60 @@
+
+.navbar-nav .nav-link {
+    font-size: 18px; /* Adjust the font size as needed */
+}
+
+/* Add custom CSS for profile image container */
+.profile-image-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+/* Add custom CSS for profile image */
+.profile-image {
+    display: block;
+    width: 49px;
+    height: 49px;
+    border-radius: 50%;
+}
+
+
+
+/* Add custom CSS for profile image of tutor to be displayed */
+.profile-images {
+    display: block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+
+
+/* Add custom CSS for profile options */
+.profile-options {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: calc(-100% - 10px); /* Position options to the left of the image */
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 5px;
+    z-index: 1;
+}
+
+/* Display profile options in one line */
+.profile-options a {
+    display: inline-block;
+}
+
+/* Show profile options when hovering over profile image container */
+.profile-image-container:hover .profile-options {
+    display: block;
+}
+
+
+
+
+
+
+

@@ -1,0 +1,84 @@
+{% extends "base/navbar.html" %}
+{% block title %} How It Works {% endblock %}
+{% block content %}
+
+<!-- Main Content -->
+<div class="container">
+    <h3 class="section-title text-center mt-3 mb-4">How It Works</h3>
+
+    <!-- Section for Tutors -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-chalkboard-teacher"></i> For Tutors
+        </div>
+        <div class="card-body">
+            <div class="step mb-3">
+                <h5><i class="fas fa-user-edit text-primary"></i> Create Profile</h5>
+                <p>Advertise yourself by creating a detailed profile. Profiles with more details get maximum attention from our students and parents.</p>
+            </div>
+            
+            <div class="step mb-3">
+                <h5><i class="fas fa-tasks text-primary"></i> Take Action</h5>
+                <p>Whenever a student sends a request to you, the request will appear in your dashboard and you will receive an email notification. It is then up to you to accept or reject the student's request.</p>
+            </div>
+
+            <div class="step mb-3">
+                <h5><i class="fas fa-money-bill-wave text-primary"></i> Start Earning</h5>
+                <p>Once you accept a student's request, you can start tutoring and earn money.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Section for Students -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-success text-white">
+            <i class="fas fa-user"></i> For Students
+        </div>
+        <div class="card-body">
+            <div class="step mb-3">
+                <h5><i class="fas fa-user-plus text-success"></i> Register</h5>
+                <p>You can register on our website for free. <a href="{% url 'student_registration' %}" class="btn btn-primary btn-sm">Register here</a>.</p>
+            </div>
+            <div class="step mb-3">
+                <h5><i class="fas fa-search text-success"></i> Search For Tutors</h5>
+                <p>After registering and confirming your email, you can search for available tutors on our site. Use filters such as location, gender, subject, and skill to find the right tutor for you. It is your responsibility to validate the credentials of the tutor before you agree with them.</p>
+            </div>
+            <div class="step mb-3">
+                <h5><i class="fas fa-paper-plane text-success"></i> Send Request</h5>
+                <p>If you like a tutor's profile, you can send a request by filling out a form. Wait for the tutor's response, which you will receive in your dashboard and via email notification.</p>
+            </div>
+            <div class="step mb-3">
+                <h5><i class="fas fa-book-reader text-success"></i> Learn and Achieve</h5>
+                <p>Once the tutor accepts your request, start your learning journey and achieve your academic goals.</p>
+            </div>
+            <div class="step mb-3">
+                <h5><i class="fas fa-star text-success"></i> Rate and Review</h5>
+                <p>After your class ends, don't forget to rate and review your tutor. Note that you cannot rate if you haven't sent a request.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forum Section -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-info text-white">
+            <i class="fas fa-comments"></i> Forum Section
+        </div>
+        <div class="card-body">
+            <p>You can interact with your tutor or student in the forum section to ask and answer any questions. <a href="{% url 'front_page' %}" class="btn btn-info btn-sm">Go to Forum</a></p>
+        </div>
+    </div>
+
+    <!-- Contact Admin Section -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-warning text-dark">
+            <i class="fas fa-envelope"></i> Contact Admin
+        </div>
+        <div class="card-body">
+            <p>If you have any questions or want to contact the admin, please <a href="{% url 'index' %}" class="btn btn-primary btn-sm">drop your questions here</a>.</p>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
