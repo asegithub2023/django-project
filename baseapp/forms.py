@@ -4,7 +4,6 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Tutor, Student,User,Rating,Topic,Reply
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Request
-
 from django.core.validators import RegexValidator
 from .models import Request
 
@@ -100,14 +99,6 @@ class RatingForm(forms.ModelForm):
         return review_text
         
 
-
-
-# # Define the validator
-# alphabet_validator = RegexValidator(
-#     regex=r'^[a-zA-Z\s]*$',
-#     message='Only alphabet characters are allowed!'
-# )
-
 class RequestForm(forms.ModelForm):
     subjects = forms.CharField(validators=[alphabet_validator])
     city = forms.CharField(validators=[alphabet_validator])
@@ -139,6 +130,3 @@ class TopicForm(forms.ModelForm):
        
 
 
-
-#reply_to_reply is not working
-#user cannot reply to his own message(remove such functionality)

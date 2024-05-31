@@ -56,9 +56,6 @@ path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(),nam
 path('reset/done/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
 
 
-
-
-
 path('token' , views.token_send , name="token_send"),
 path('verify/<auth_token>' , views.verify , name="verify"),
 path('error' , views.error_page , name="error"),

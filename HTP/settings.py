@@ -147,10 +147,10 @@ SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_USE_TLS = True  # Or False if your email provider doesn't use TLS
-EMAIL_HOST_USER = 'asefa.negash-ug@aau.edu.et'#sender's email-id
+EMAIL_USE_TLS = True  
+EMAIL_HOST_USER = 'asefa.negash-ug@aau.edu.et'
 EMAIL_HOST_PASSWORD = 'vnun izfi exsq ivvi'#password associated with above email-id
-PASSWORD_RESET_TIMEOUT = 3600#duration for which a password reset token remains valid.
+PASSWORD_RESET_TIMEOUT = 3600
 
 #Allow less secure apps to access your Gmail account
 #Enable Less secure app access
