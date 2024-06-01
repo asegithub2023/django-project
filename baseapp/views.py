@@ -204,14 +204,21 @@ def student_profile_update(request):
 
 @login_required
 def tutor_profile_update(request):
+    try:
+        tutor = request.user.tutor
+    except Tutor.DoesNotExist:
+        # Handle the case where the Tutor instance does not exist
+        messages.error(request, 'Tutor profile does not exist.')
+        return redirect('home')
+
     if request.method == 'POST':
-        form = TutorProfilePhotoForm(request.POST, request.FILES, instance=request.user)
+        form = TutorProfilePhotoForm(request.POST, request.FILES, instance=tutor)
         if form.is_valid():
             messages.success(request, 'Your profile is updated successfully')
             form.save()
             return redirect('home')
     else:
-        form = TutorProfilePhotoForm(instance=request.user)
+        form = TutorProfilePhotoForm(instance=tutor)
     return render(request, 'base/tutor_profile_update.html', {'form': form})
 
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
