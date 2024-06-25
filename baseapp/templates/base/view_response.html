@@ -11,6 +11,7 @@
           <th>Request Subjects</th>
           <th>Status</th>
           <th>Request Date</th>
+          <th>Request_Details</th> 
           <th>Action</th> 
         </tr>
       </thead>
@@ -21,6 +22,7 @@
           <td>{{ request.subjects }}</td>
           <td>{{ request.status }}</td>
           <td>{{ request.request_date }}</td>
+          <td>{{ request.request_details}}</td>
           <td>
             <!-- Add delete button/link -->
             <form action="{% url 'delete_request' request.id %}" method="post">

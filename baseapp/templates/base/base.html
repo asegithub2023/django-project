@@ -111,6 +111,11 @@
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 <body>
+  {% if message %}
+    <p>{{ message }}</p>
+{% endif %}
+
+
     <div class="container-fluid px-0 mt-5">
         <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
             <a href="/" class="navbar-brand">
@@ -447,7 +452,7 @@
       if (index < sentence.length) {
         typewriter.textContent += sentence.charAt(index);
         index++;
-        setTimeout(type, 100); //  time interval for the typing speed
+        setTimeout(type, 200); //  time interval for the typing speed
       } else {
         index = 0;
         typewriter.textContent = "";

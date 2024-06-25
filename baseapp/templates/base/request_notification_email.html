@@ -52,72 +52,9 @@
         <div class="content">
             <p>Dear {{ tutor.get_full_name }},</p>
             <p>Student <strong>{{ student_full_name }}</strong> has sent a tutoring request for assistance. Please review the details below:</p>
-            <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Tutoring Request</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2, h3, p {
-            margin: 0;
-        }
-        .header {
-            background-color: #007bff;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px 8px 0 0;
-        }
-        .content {
-            padding: 20px;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>New Tutoring Request</h1>
-        </div>
-        <div class="content">
-            <p>Dear {{ tutor.get_full_name }},</p>
-            <p>Student <strong>{{ student_full_name }}</strong> has sent a tutoring request for assistance. Please review the details below:</p>
             <ul>
                 <li><strong>Student Name:</strong> {{ student_full_name }}</li>
-                <!-- Add more details here if needed -->
             </ul>
-            <p>Click <a href="{{ tutor_dashboard_link }}" class="button">here</a> to access your dashboard and respond to the request.</p>
-            <p>Best regards,</p>
-            <p>Home Tutor Website</p>
-        </div>
-    </div>
-</body>
-</html>
-
             <p>Click <a href="{{ tutor_dashboard_link }}" class="button">here</a> to access your dashboard and respond to the request.</p>
             <p>Best regards,</p>
             <p>Home Tutor Website</p>

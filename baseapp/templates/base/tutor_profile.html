@@ -3,7 +3,7 @@
 
 {% block content %}
 <br><br><br>
-<div class="container mt-3">
+<div class="container mt-3 content-container">
     <div class="row">
         <div class="col-md-4" class="profile-image-container">
             <img src="{{ tutor.profile_photo.url }}" alt="{{ tutor.first_name }}'s Profile Photo" width="200"
@@ -127,6 +127,15 @@
         margin-top: 40px; 
     }
 
+
+
+    .content-container {
+    border: 1px solid #213ad9; 
+    padding: 15px; 
+    border-radius: 10px; 
+    background-color: #f9f9f9; 
+  }
+</style>
 </style>
 <div class="custom-margin-top">
 {% include 'base/AllRightReserved.html' %}

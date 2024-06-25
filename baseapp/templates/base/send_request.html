@@ -1,10 +1,10 @@
 {% load crispy_forms_tags %}
+{% load static %}
 {% include "base/navbar.html" %}
 {% block content %}
 <style>
-  /* Add this style to set the background color */
   body {
-    background-color:  #0bc1ce; /* Choose your desired background color */
+    background-color:  #0bc1ce; 
   }
 </style>
 <br><br><br>
@@ -13,9 +13,19 @@
         <div class="col-lg-6">
             <div class="card shadow-lg rounded-lg">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Send Request to {{ tutor.first_name }} {{ tutor.last_name }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted text-center">Tutor Request Form</h6>
                     <p class="card-text text-center">Request a tutor by filling out the form below.</p>
+
+                    {% if messages %}
+                        <div class="mb-3">
+                            {% for message in messages %}
+                                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
                     <form method="post" class="form" id="requestForm">
                         {% csrf_token %}
                         {{ form|crispy }}

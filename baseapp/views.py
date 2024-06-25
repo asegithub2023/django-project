@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import TutorRegistrationForm, StudentRegistrationForm,StudentProfilePhotoForm, TutorProfilePhotoForm, LoginForm, RatingForm,TopicForm, ReplyForm,RequestForm,RatingForm
-from .models import User, Student, Tutor, Rating,Contacts,Request,Contacts,Category, Topic, Reply#, Post 
+from .models import User, Student, Tutor, Rating,ContactUs,Request,Category, Topic, Reply#, Post 
 from .models import *
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.urls import reverse_lazy
@@ -35,6 +35,9 @@ from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 
 
+import socket
+import requests
+import uuid
 # Create your views here.
 
 def home(request):
@@ -117,6 +120,8 @@ def send_mail_after_registration(email , token):
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email]
     send_mail(subject, message , email_from ,recipient_list )
+    
+
     
 def login_view(request):
     if request.method == "POST":
@@ -229,7 +234,7 @@ class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
 @login_required(login_url='login')
 def add_rating(request, tutor_id):
     if not hasattr(request.user, 'student'):
-        messages.error(request, 'You are not allowed to rate this tutor because you are not a student!')
+        messages.error(request, 'Only student are allowed to rate a tutor!')
         return redirect('tutor_profile', tutor_id=tutor_id)
 
     tutor = get_object_or_404(Tutor, id=tutor_id)
@@ -297,6 +302,7 @@ def tutor_profile(request, tutor_id):
     
     return render(request, 'base/tutor_profile.html', {'tutor': tutor, 'ratings': ratings, 'avg_rating': avg_rating, 'avg_rating_range': avg_rating_range})
 
+
 @login_required
 def send_request(request, tutor_id):
     if not hasattr(request.user, 'student'):
@@ -312,7 +318,15 @@ def send_request(request, tutor_id):
             request_obj.student = request.user.student
             request_obj.tutor = tutor
             request_obj.save()
-            send_notification_to_tutor(request.user.student, tutor)
+
+            try:
+                send_notification_to_tutor(request.user.student, tutor)
+                messages.success(request, 'Your request has been sent successfully.')
+            except socket.timeout:
+                messages.error(request, 'Your connection is slow. Please try again later.')
+            except Exception as e:
+                messages.error(request, f'An error occurred: {str(e)}')
+
             return redirect('student_dashboard')
     else:
         form = RequestForm()
@@ -328,9 +342,10 @@ def send_notification_to_tutor(student, tutor):
         'tutor_dashboard_link': 'http://127.0.0.1:8000/tutor_dashboard/view-requests/'
     })
     plain_message = strip_tags(message)
-    # Dynamically determine sender email address
+     # Dynamically determine sender email address
     from_email = student.email
     send_mail(subject, plain_message, from_email, [tutor_email], html_message=message)
+
 
 @login_required()
 def view_response(request):
@@ -407,17 +422,20 @@ def delete_request_tutor(request, request_id):
         # If not authorized, return forbidden response
         return HttpResponseForbidden("You are not authorized to delete this request.")
 
+
 def search_tutors(request):
-    if 'search2' in request.GET:
-        query = request.GET['search2']
+    query = request.GET.get('search2', '').strip()  # Get the query parameter and strip any whitespace
+
+    if query:  # If there is a query, proceed with the search
         tutors = Tutor.objects.filter(
             skills__icontains=query) | Tutor.objects.filter(
             sex__icontains=query) | Tutor.objects.filter(
             location__icontains=query) | Tutor.objects.filter(
             subjects__icontains=query)
         return render(request, 'base/search_results.html', {'tutors': tutors, 'query': query})
-    else:
-        return render(request, 'home.html')
+    else:  # If no query parameter is provided
+        message = "Please enter search parameters."
+        return render(request, 'base/home.html', {'message': message})
 
 @login_required
 def index(request):
@@ -429,7 +447,7 @@ def index(request):
         message = request.POST.get('message')
         
         # Save contact with user details
-        contact = Contacts.objects.create(
+        contact = ContactUs.objects.create(
             full_name=full_name,
             email=email,
             subject=subject,
@@ -551,7 +569,6 @@ def edit_reply(request, topic_id, reply_id):
 def how_it_works(request):
     return render(request, 'base/howItworks.html')
 
-
 @login_required
 def reply_to_reply(request, topic_id, reply_id):
     topic = get_object_or_404(Topic, pk=topic_id)
@@ -570,3 +587,180 @@ def reply_to_reply(request, topic_id, reply_id):
         form = ReplyForm()
 
     return render(request, 'base/reply_to_reply.html', {'form': form, 'parent_reply': parent_reply, 'topic': topic})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# @login_required
+# def send_request(request, tutor_id):
+#     if not hasattr(request.user, 'student'):
+#         messages.error(request, 'You are not allowed to send a request if you are not a student.')
+#         return redirect('tutor_profile', tutor_id=tutor_id)
+
+#     tutor = get_object_or_404(Tutor, id=tutor_id)
+
+#     if request.method == 'POST':
+#         form = RequestForm(request.POST)
+#         if form.is_valid():
+#             request_obj = form.save(commit=False)
+#             request_obj.student = request.user.student
+#             request_obj.tutor = tutor
+#             request_obj.save()
+
+
+#             send_notification_to_tutor(request.user.student, tutor)
+#             return redirect('student_dashboard')
+#     else:
+#         form = RequestForm()
+
+#     return render(request, 'base/send_request.html', {'form': form, 'tutor': tutor})
+
+# def send_notification_to_tutor(student, tutor):
+#     tutor_email = tutor.email
+#     student_full_name = student.get_full_name()
+#     subject = 'Notification: New Tutoring Request'
+#     message = render_to_string('base/request_notification_email.html', {
+#         'student_full_name': student_full_name,
+#         'tutor_dashboard_link': 'http://127.0.0.1:8000/tutor_dashboard/view-requests/'
+#     })
+#     plain_message = strip_tags(message)
+#     # Dynamically determine sender email address
+#     from_email = student.email
+#     send_mail(subject, plain_message, from_email, [tutor_email], html_message=message)
+
+
+
+# def search_tutors(request):
+#     if 'search2' in request.GET:
+#         query = request.GET['search2']
+#         tutors = Tutor.objects.filter(
+#             skills__icontains=query) | Tutor.objects.filter(
+#             sex__icontains=query) | Tutor.objects.filter(
+#             location__icontains=query) | Tutor.objects.filter(
+#             subjects__icontains=query)
+#         return render(request, 'base/search_results.html', {'tutors': tutors, 'query': query})
+#     else:
+#         return render(request, 'base/home.html')
+
+
+
+
+# def send_mail_after_registration(email , token):
+#     subject = 'Your accounts need to be verified'
+#     message = f'Hi, use this link to verify your account http://127.0.0.1:8000/verify/{token}'
+#     email_from = settings.EMAIL_HOST_USER
+#     recipient_list = [email]
+#     send_mail(subject, message , email_from ,recipient_list )
+
+
+# def student_registration(request):
+#     form = StudentRegistrationForm()
+#     if request.method == 'POST':
+#         form = StudentRegistrationForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             user = form.save(commit=False)
+#             user.is_student = True
+#             user.save()
+
+#             # Generate and save the authentication token
+#             token = uuid.uuid4().hex
+#             user.auth_token = token
+#             user.save()
+
+#             # Send verification email
+#             send_mail_after_registration(user.email, token)
+
+#             # Redirect to a page indicating that the email has been sent
+#             return redirect('token_send')
+#     return render(request, 'base/student_registration.html', {'form': form})
+
+
+# def student_registration(request):
+#     form = StudentRegistrationForm()
+#     if request.method == 'POST':
+#         form = StudentRegistrationForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             user = form.save(commit=False)
+#             user.is_student = True
+#             user.save()
+
+#             # Generate and save the authentication token
+#             token = uuid.uuid4().hex
+#             user.auth_token = token
+#             user.save()
+
+#             try:
+#                 # Send verification email
+#                 send_mail_after_registration(user.email, token)
+#                 # messages.success(request, 'A verification email has been sent to your email address.')
+#                 return redirect('token_send')
+#             except socket.timeout:
+#                 messages.error(request, 'Your connection is slow. Please try again later.')
+#             except Exception as e:
+#                 messages.error(request, f'An error occurred: {str(e)}')
+
+#     return render(request, 'base/student_registration.html', {'form': form})
+
+# def tutor_registration(request):
+#     form = TutorRegistrationForm()
+#     if request.method == 'POST':
+#         form = TutorRegistrationForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             user = form.save(commit=False)
+#             user.is_tutor = True
+#             user.save()
+
+#             # Generate and save the authentication token
+#             token = uuid.uuid4().hex
+#             user.auth_token = token
+#             user.save()
+
+#             # Send verification email
+#             send_mail_after_registration(user.email, token)
+
+#             # Redirect to a page indicating that the email has been sent
+#             return redirect('token_send')
+#     return render(request, 'base/tutor_registration.html', {'form': form})
+
+  
+# def verify(request, auth_token):
+#     try:
+#         user = User.objects.get(auth_token=auth_token)
+
+#         if user.is_verified:
+#             messages.success(request, 'Your account is already verified.')
+#         else:
+#             user.is_verified = True
+#             user.save()
+#             messages.success(request, 'Your account has been verified.')
+
+#         return redirect('login')
+
+#     except User.DoesNotExist:
+#         return redirect('error')
+
+# def error_page(request):
+#     return  render(request , 'base/error.html')
+
+# def token_send(request):
+#     return render(request , 'base/token_send.html')
+
+# def send_mail_after_registration(email, token):
+#     subject = 'Your account needs to be verified'
+#     message = f'Hi, use this link to verify your account: http://127.0.0.1:8000/verify/{token}'
+#     email_from = settings.EMAIL_HOST_USER
+#     recipient_list = [email]
+#     send_mail(subject, message, email_from, recipient_list)

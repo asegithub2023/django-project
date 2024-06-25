@@ -149,7 +149,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True  
 EMAIL_HOST_USER = 'asefa.negash-ug@aau.edu.et'
-EMAIL_HOST_PASSWORD = 'vnun izfi exsq ivvi'#password associated with above email-id
+EMAIL_HOST_PASSWORD = 'vnun izfi exsq ivvi'
 PASSWORD_RESET_TIMEOUT = 3600
 
 #Allow less secure apps to access your Gmail account

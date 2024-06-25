@@ -1,11 +1,10 @@
 from django.forms import ModelForm
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Tutor, Student,User,Rating,Topic,Reply
+from .models import Tutor, Student,User,Request,Rating,Topic,Reply
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Request
 from django.core.validators import RegexValidator
-from .models import Request
+
 
 
 # Define the validator
